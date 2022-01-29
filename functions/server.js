@@ -16,4 +16,4 @@ const server = Server({
 });
 
 module.exports = server;
-exports.handler = serverless(server.app);
+module.exports.handler = serverless(server.app);
