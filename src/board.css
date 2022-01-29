@@ -1,0 +1,45 @@
+.board {
+  border-collapse: collapse;
+  font-family: monospace;
+}
+
+.winner {
+  margin-top: 25px;
+  width: 168px;
+  text-align: center;
+}
+
+td {
+  text-align: center;
+  font-weight: bold;
+  font-size: 15px;
+  color: #555;
+  width: 50px;
+  height: 50px;
+  line-height: 50px;
+  border: 3px solid #aaa;
+  cursor: pointer;
+  background: #eeffe9;
+}
+
+td:hover {
+  background: #eeffff;
+}
+
+td.disabled {
+  cursor: default;
+  pointer-events: none;
+}
+
+.briscola td {
+  cursor: default;
+  background: #ffffe0;
+  width: 25px;
+  height: 25px;
+  line-height: 25px;
+  font-size: 10px;
+}
+.desk td {
+  background: #fff;
+  cursor: default;
+}
