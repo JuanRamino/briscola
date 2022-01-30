@@ -144,7 +144,7 @@ const endTurn = (G, ctx) => {
     winner: winner.playerID,
     hand: `${winner.value} ${winner.seed} > ${loser.value} ${loser.seed}`
   };
-  ctx.events.endTurn({ next: loser.playerID });
+  ctx.events.endTurn({ next: winner.playerID });
 };
 
 const drawCard = (G, ctx) => {
