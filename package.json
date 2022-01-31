@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "keywords": [],
-  "main": "src/index.js",
+  "main": "index.js",
   "dependencies": {
     "boardgame.io": "0.49.10",
     "esm": "^3.2.25",

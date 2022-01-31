@@ -1,7 +1,6 @@
 import "./styles.css";
 import { Client } from "boardgame.io/react";
-import { Local } from "boardgame.io/multiplayer";
-// import { SocketIO } from 'boardgame.io/multiplayer'
+import { SocketIO } from 'boardgame.io/multiplayer'
 import { Briscola } from "./Game";
 import Board from "./Board";
 
@@ -9,7 +8,7 @@ var BriscolaClient = Client({
   board: Board,
   game: Briscola,
   debug: true,
-  multiplayer: Local()
+  multiplayer: SocketIO({ server: `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}` }),
 });
 
 export default function App() {
