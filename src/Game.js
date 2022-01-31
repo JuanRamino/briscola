@@ -108,9 +108,7 @@ const playCard = (G, ctx, i) => {
   const desk = G.hand.find((h) => h.desk);
   desk.cards.push(card);
 
-  if (desk.cards.length === 2) {
-    endTurn(G, ctx);
-  }
+  endTurn(G, ctx);
 };
 
 const getHandWinner = (firstCard, lastCard, briscolaSeed) => {
@@ -133,6 +131,11 @@ const getHandWinner = (firstCard, lastCard, briscolaSeed) => {
 
 const endTurn = (G, ctx) => {
   const desk = G.hand.find((h) => h.desk);
+
+  if (desk.cards.length < 2) {
+    return ctx.events.endTurn();
+  }
+
   const firstCard = desk.cards[0];
   const lastCard = desk.cards[1];
 
@@ -166,7 +169,6 @@ export const Briscola = {
 
   turn: {
     minMoves: 1,
-    maxMoves: 1,
     onBegin: drawCard
   },
   moves: {
