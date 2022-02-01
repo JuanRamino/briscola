@@ -19,72 +19,84 @@ var BriscolaClient = Client({
 
 export default function App() {
   const [matches, setMatches] = useState("");
-  const [playerID, setPlayer] = useState("");
+  const [match, setMatche] = useState("");
+  const [player, setPlayer] = useState({ID: null, credentials: null});
 
   useEffect(() => {
     const fetchMatches= async () => {
-        try {
-            const { matches }  = await lobbyClient.listMatches('default');
-            console.log(matches);
-            setMatches(matches);
-        } catch (error) {
-            console.log("error", error);
-        }
+      try {
+          const { matches }  = await lobbyClient.listMatches('default');
+          console.log(matches);
+          setMatches(matches);
+      } catch (error) {
+          console.log("error", error);
+      }
     };
     fetchMatches();
   }, []);
 
   useEffect(() => {
     const createMatch= async () => {
-        try {
-          const { matchID } = await lobbyClient.createMatch('default', {
-            numPlayers: 2
-          });
-          console.log(matchID);
-          setMatches([...matches, matchID]);
-        } catch (error) {
-          console.log("error", error);
-        }
+      try {
+        console.log('create match');
+        const { matchID } = await lobbyClient.createMatch('default', {
+          numPlayers: 2
+        });
+        console.log('created match %s', matchID);
+        setMatches([...matches, matchID]);
+        setMatche(matchID);
+      } catch (error) {
+        console.log("error", error);
+      }
     };
     createMatch();
   }, []);
 
   useEffect(() => {
     const joinMatch= async () => {
+      if (match) {
         try {
+          console.log('join match', match);
           const { playerCredentials, playerID } = await lobbyClient.joinMatch(
             'default',
-            'T7K2xkOiHnM',
+            match,
             {
               playerName: 'Alice',
             }
           );
-          console.log(playerID);
-          setPlayer(playerID);
+          console.log('player %s join match with credentials %s', playerID, playerCredentials);
+          setPlayer({
+            ID: playerID,
+            credentials: playerCredentials,
+          });
         } catch (error) {
           console.log("error", error);
         }
+      }
     };
     joinMatch();
   }, [match]);
 
   useEffect(() => {
     const leaveMatch= async () => {
-        if (playerID) {
-          try {
-            await lobbyClient.leaveMatch('default', 'matchID', {
-              playerID: '0',
-              credentials: 'playerCredentials',
-            });
-            console.log(playerID);
-            setPlayer(null);
-          } catch (error) {
-            console.log("error", error);
-          }
+      if (player.ID) {
+        try {
+          console.log('player %s leave match %s', player.ID, match);
+          await lobbyClient.leaveMatch('default', match, {
+            playerID: player.ID,
+            credentials: player.credentials,
+          });
+          setPlayer({
+            ID: null,
+            credentials: null
+          });
+        } catch (error) {
+          console.log("error", error);
         }
+      }
     };
     leaveMatch();
-  }, [playerID]);
+  }, [player]);
 
   // const { nextMatchID } = await lobbyClient.playAgain('default', 'matchID', {
   //  playerID: '0',
