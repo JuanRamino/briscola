@@ -36,7 +36,7 @@ export default function App() {
         numPlayers: 2
       });
       console.log('created match %s', matchID);
-      await joinMatch(matchID);
+      await joinMatch(matchID, player.name);
       
       const matchData  = await lobbyClient.getMatch('default', matchID);
       const foundIndex = matches.findIndex((m) => m.matchID === matchID);
@@ -137,7 +137,7 @@ export default function App() {
             leave
           </button>
           <span>
-            { matchID } - { players.map((p) => p.name).join(' | ') }
+            { matchID } - { players.map((p) => p.name).join(' VS ') }
           </span>
         </li>
       );
