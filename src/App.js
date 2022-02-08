@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import { Client } from "boardgame.io/react";
 import { LobbyClient } from 'boardgame.io/client';
 import { SocketIO } from 'boardgame.io/multiplayer'
+import { generateUsername } from "unique-username-generator";
 import { Briscola } from "./Game";
 import Board from "./Board";
 
@@ -26,7 +27,7 @@ var BriscolaClient = Client({
 export default function App() {
   const [matches, setMatches] = useState([]);
   const [match, setMatch] = useState("");
-  const [player, setPlayer] = useState({ID: null, credentials: null, name: 'Ramino'})
+  const [player, setPlayer] = useState({ID: null, credentials: null, name: generateUsername("_", 0, 13)})
 
   const createMatch = async () => {
     try {
@@ -81,7 +82,7 @@ export default function App() {
   };
 
   const leaveMatch = async () => {
-    if (player.ID) {
+    if (player.ID && match) {
       try {
         console.log('player %s leave match %s', player.ID, match);
         await lobbyClient.leaveMatch('default', match, {
@@ -89,9 +90,11 @@ export default function App() {
           credentials: player.credentials,
         });
         setPlayer({
+          ...player,
           ID: null,
           credentials: null
         });
+        setMatch("");
       } catch (error) {
         console.log("error", error);
       }
@@ -115,25 +118,36 @@ export default function App() {
 
   useEffect(() => {
     fetchMatches();
-  }, []);
+  }, [match]);
 
   const drawLobby = () => {
-    const list = matches.map((match, i) => {
+    const list = matches.map(({ matchID, players }, i) => {
       return (
-        <li key={i} onClick={() => {
-          if (match.players.filter((p) => p.name).length < 2) {
-            joinMatch(match.matchID, player.name)
-          }
-        }}>
-          { match.matchID } - { match.players.map((p) => p.name).join(' | ') }
+        <li key={i}>
+          <button
+            disabled={!!match || (players.filter((p) => p.name).length === 2)}
+            onClick={() => joinMatch(matchID, player.name)}
+          >
+            join
+          </button>
+          <button
+            disabled={!match || match !== matchID}
+            onClick={() => leaveMatch()}
+          >
+            leave
+          </button>
+          <span>
+            { matchID } - { players.map((p) => p.name).join(' | ') }
+          </span>
         </li>
       );
     });
 
     return (
       <div>
+        <p>Player: {player.name}</p>
         <ul>{list}</ul>
-        <button onClick={ () => createMatch() }>create match</button>
+        <button disabled={!!match} onClick={ () => createMatch() }>create match</button>
       </div>
     ); 
   }
