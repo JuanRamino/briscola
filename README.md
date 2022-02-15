@@ -18,4 +18,4 @@ REACT_APP_SERVER_HOST=http://localhost REACT_APP_SERVER_PORT=3001 npm run build
 
 ## Demo
 
-https://briscola.webabile.it/
+https://briscola.webabile.it/app
