@@ -8,7 +8,7 @@ import { Briscola } from "./Game";
 import Board from "./Board";
 
 const lobbyClient = new LobbyClient({
-  server: `http://${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}`
+  server: `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}`
 });
 
 const replace = (array, index, ...items) => [

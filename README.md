@@ -6,7 +6,7 @@ Italian card game developed with https://boardgame.io/
 
 ### FE
 
-REACT_APP_SERVER_HOST=localhost REACT_APP_SERVER_PORT=3001 npm run start
+REACT_APP_SERVER_HOST=http://localhost REACT_APP_SERVER_PORT=3001 npm run start
 
 ### BE
 
@@ -14,7 +14,7 @@ SERVER_PORT=3001 npm run server
 
 ## Build
 
-REACT_APP_SERVER_HOST=localhost REACT_APP_SERVER_PORT=3001 npm run build
+REACT_APP_SERVER_HOST=http://localhost REACT_APP_SERVER_PORT=3001 npm run build
 
 ## Demo
 
