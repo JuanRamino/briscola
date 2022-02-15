@@ -6,6 +6,7 @@ import { SocketIO } from 'boardgame.io/multiplayer'
 import { generateUsername } from "unique-username-generator";
 import { Briscola } from "./Game";
 import Board from "./Board";
+import { useInterval } from './lib'
 
 const lobbyClient = new LobbyClient({
   server: `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}`
@@ -20,7 +21,6 @@ const replace = (array, index, ...items) => [
 var BriscolaClient = Client({
   board: Board,
   game: Briscola,
-  debug: true,
   multiplayer: SocketIO({ server: `${process.env.REACT_APP_SERVER_HOST}:${process.env.REACT_APP_SERVER_PORT}` }),
 });
 
@@ -37,11 +37,7 @@ export default function App() {
       });
       console.log('created match %s', matchID);
       await joinMatch(matchID, player.name);
-      
-      const matchData  = await lobbyClient.getMatch('default', matchID);
-      const foundIndex = matches.findIndex((m) => m.matchID === matchID);
 
-      setMatches(replace(matches, foundIndex, matchData));
     } catch (error) {
       console.log("error", error);
     }
@@ -49,13 +45,20 @@ export default function App() {
 
   const fetchMatches = async () => {
     try {
-        const { matches }  = await lobbyClient.listMatches('default');
+        let { matches }  = await lobbyClient.listMatches('default');
+        matches = matches.filter((m) => m.players.every((p) => !p.name || (p.name && p.isConnected !== false)));
         console.log('Match list %s', matches);
         setMatches(matches);
     } catch (error) {
         console.log("error", error);
     }
   };
+
+  useInterval(
+    () => fetchMatches(),
+    3 * 1000
+  )
+
 
   const joinMatch= async (matchID, playerName) => {
     if (matchID) {
